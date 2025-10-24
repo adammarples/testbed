@@ -1,6 +1,6 @@
 # Data Testbed Project
 
-A demonstration project showing a modern data stack with DuckDB, DuckLake, dbt, and Dagster.
+A demonstration project for learning the interactions between DuckLake, dbt, and Dagster. Disclaimer: 90% vibe-coded.
 
 ## Requirements
 * uv
