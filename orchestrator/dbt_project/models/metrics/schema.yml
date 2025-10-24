@@ -10,6 +10,11 @@ models:
         description: Total amount spent by customer
       - name: total_purchases
         description: Number of purchases made
+      - name: email
+        description: Customer email address
+        data_tests:
+          - unique
+          - not_null
 
   - name: store_metrics
     description: Store-level aggregated metrics
