@@ -2,7 +2,7 @@ set dotenv-filename := 'orchestrator/.env'
 
 setup-env:
     touch orchestrator/.env
-    echo "DAGSTER_HOME=$(pwd)/orchestrator/dagster_home" >> orchestrator/.env
+    echo "DAGSTER_HOME={{justfile_directory()}}/orchestrator/.dagster_home" >> orchestrator/.env
 
 setup-uv:
     uv sync --project data_generator
@@ -24,10 +24,10 @@ setup-ducklake:
 setup: setup-uv setup-dbt setup-dagster setup-data setup-ducklake
 
 inspect:
-    @echo "=== ALl Tables (DuckLake) ==="
-    duckdb data/lakehost.duckdb -c "ATTACH 'ducklake:data/lake.ducklake'; SHOW ALL TABLES;"
     @echo "\n=== dbt Configuration ==="
     cd orchestrator/dbt_project && uv run dbt debug
+    @echo "=== ALl Tables (DuckLake) ==="
+    duckdb data/lakehost.duckdb -c "ATTACH 'ducklake:data/lake.ducklake'; SHOW TABLES FROM lake;"
     @echo "\n=== dbt Models ==="
     cd orchestrator/dbt_project && uv run dbt ls
     @echo "\n=== Dagster Assets ==="
