@@ -84,6 +84,8 @@ dbt project that transforms source data into:
 ### orchestrator/dagster_project
 Dagster code that orchestrates the dbt transformations.
 
+### dst_db
+The destination db for stage and analytics data, a normal duckdb.
 
 ## Tech Stack
 
