@@ -9,28 +9,28 @@ A demonstration project showing a modern data stack with DuckDB, DuckLake, dbt, 
 
 ## Quick Start
 
-    ```bash
-    # Install dependencies, generate data and set up warehouse
-    just setup
+```bash
+# Install dependencies, generate data and set up warehouse
+just setup
 
-    # Run dbt transformations
-    just dbt-run
+# Inspect all your data and assets
+just inspect
 
-    # Start Dagster UI
-    just dagster-dev
+# Run dbt transformations
+just dbt-run
 
-    # Inspect all your data and assets
-    just inspect
+# Start Dagster UI
+just dagster-dev
 
-    # Rebuild and inspect all
-    just rebuild
+# Nuke envs, data, logs, state, rebuild and inspect all
+just rebuild
 
 ```
 
 ## Architecture
 
 ```mermaid
-graph TB
+graph LR
     subgraph "Data Generation"
         A[data_generator]
         B[src_data/*.parquet]
