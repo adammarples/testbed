@@ -7,6 +7,10 @@ A demonstration project showing a modern data stack with DuckDB, DuckLake, dbt, 
 * duckdb >= 1.2
 * just
 
+```bash
+brew install uv duckdb just
+```
+
 ## Quick Start
 
 ```bash
