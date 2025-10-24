@@ -7,6 +7,26 @@ A demonstration project showing a modern data stack with DuckDB, DuckLake, dbt, 
 * duckdb >= 1.2
 * just
 
+## Quick Start
+
+    ```bash
+    # Install dependencies, generate data and set up warehouse
+    just setup
+
+    # Run dbt transformations
+    just dbt-run
+
+    # Start Dagster UI
+    just dagster-dev
+
+    # Inspect all your data and assets
+    just inspect
+
+    # Rebuild and inspect all
+    just rebuild
+
+```
+
 ## Architecture
 
 ```mermaid
@@ -57,18 +77,6 @@ dbt project that transforms source data into:
 ### orchestrator/dagster_project
 Dagster code that orchestrates the dbt transformations.
 
-## Quick Start
-
-```bash
-# Install dependencies, generate data and set up warehouse
-just setup
-
-# Run dbt transformations
-just dbt-run
-
-# Start Dagster UI
-just dagster-dev
-```
 
 ## Tech Stack
 
