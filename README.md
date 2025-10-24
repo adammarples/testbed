@@ -79,7 +79,9 @@ Generates synthetic retail data (customers, stores, products, sales) as parquet 
 ### data/
 
 * lakehost.duckdb: A DuckLake warehouse acting as an entrypoint for the datalake
-* lake.ducklake: The actual data and the catalogue tables.
+* catalogue.ducklake: The catalogue tables.
+* generated_data: The inital sample data in parquet files
+* minio/ducklake-data/data: The actual data being served via minio on s3://ducklake-data/data/
 
 - `raw_customers` - customer dimension with SCD2 history
 - `raw_stores` - store dimension with SCD2 history

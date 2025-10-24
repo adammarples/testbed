@@ -3,10 +3,16 @@ dbt_project:
   outputs:
     dev:
       type: duckdb
-      path: ducklake:../../data/lake.ducklake
+      path: ../../data/lakehost.duckdb
+      database: lakehost
       schema: analytics
       extensions:
+        - httpfs
         - ducklake
+      attach:
+        - path: ducklake:../../data/catalogue.ducklake
+          options:
+            data_path: s3://ducklake-data/data/
       settings:
         s3_endpoint: localhost:9000
         s3_use_ssl: false

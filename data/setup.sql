@@ -2,7 +2,7 @@ INSTALL ducklake;
 INSTALL httpfs;
 LOAD httpfs;
 
-CREATE SECRET (
+CREATE OR REPLACE PERSISTENT SECRET minio_local (
     TYPE S3,
     ENDPOINT 'localhost:9000',
     USE_SSL false,
@@ -11,8 +11,8 @@ CREATE SECRET (
     SECRET 'minioadmin'
 );
 
-ATTACH 'ducklake:lake.ducklake' AS lake(DATA_PATH 's3://ducklake-data/data/');
-USE lake;
+ATTACH 'ducklake:catalogue.ducklake' AS catalogue(DATA_PATH 's3://ducklake-data/data/');
+USE catalogue;
 
 CREATE SCHEMA IF NOT EXISTS raw;
 
