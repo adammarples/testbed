@@ -10,6 +10,9 @@ A demonstration project showing a modern data stack with DuckDB, DuckLake, dbt, 
 ## Quick Start
 
 ```bash
+# Run once to create a required .env file
+just setup-env
+
 # Install dependencies, generate data and set up warehouse
 just setup
 
