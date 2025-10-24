@@ -7,9 +7,10 @@ A demonstration project for learning the interactions between DuckLake, dbt, and
 * duckdb >= 1.2
 * just
 * minio
+* tree
 
 ```bash
-brew install uv duckdb just minio/stable/minio
+brew install uv duckdb just minio/stable/minio tree
 ```
 
 ## Quick Start

@@ -18,14 +18,19 @@ setup-dbt:
 setup-dagster:
     mkdir -p $DAGSTER_HOME
 
-start-minio:
-    minio server data/minio --console-address ":9001"
-
 setup-minio:
     @echo "Creating MinIO bucket..."
     @mkdir -p data/minio/ducklake-data
     @echo "MinIO bucket 'ducklake-data' ready"
 
+start-minio:
+    @minio server data/minio --console-address ":9001" > /dev/null 2>&1 & echo $$! > /tmp/minio.pid
+    @echo "MinIO started in background (PID: `cat /tmp/minio.pid`)"
+    @echo "Web console: http://localhost:9001 (user: minioadmin, pass: minioadmin)"
+
+stop-minio:
+    @pkill -f "minio server data/minio" || echo "MinIO not running"
+    @rm -f /tmp/minio.pid
 
 setup-ducklake:
     cd data && duckdb lakehost.duckdb < setup.sql
@@ -36,7 +41,7 @@ inspect:
     @echo "\n=== dbt Configuration ==="
     cd orchestrator/dbt_project && uv run dbt debug
     @echo "=== MinIO Bucket Contents ==="
-    @ls -R data/minio/ducklake-data/
+    @tree data/minio/ducklake-data/
     @echo "=== ALl Tables (DuckLake) ==="
     duckdb data/lakehost.duckdb -c "ATTACH 'ducklake:data/lake.ducklake'; SHOW TABLES FROM lake;"
     @echo "\n=== dbt Models ==="
@@ -61,6 +66,6 @@ clean-envs:
     rm -rf **/.venv
     rm -rf **/uv.lock
 
-destroy: clean-artifacts clean-envs
+destroy: stop-minio clean-artifacts clean-envs
 
-rebuild: destroy setup inspect
+rebuild: destroy start-minio setup inspect
