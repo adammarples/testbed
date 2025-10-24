@@ -1,0 +1,10 @@
+[project]
+name = "dbt_project"
+version = "0.1.0"
+description = "dbt transformations for testbed project"
+requires-python = ">=3.13"
+dependencies = [
+    "dbt-core>=1.9.0",
+    "dbt-duckdb>=1.9.0",
+    "duckdb>=1.4.0",
+]

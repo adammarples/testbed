@@ -49,13 +49,13 @@ DuckLake warehouse storing source data with:
 - `raw_products` - product catalog
 - `raw_sales` - sales transactions
 
-### orchestrator/transforms
+### orchestrator/dbt_project
 dbt project that transforms source data into:
 - **Staging layer**: Clean views of raw tables
 - **Metrics layer**: Aggregated business metrics (customer lifetime value, store performance, product analytics)
 
-### orchestrator
-Dagster project that orchestrates the dbt transformations.
+### orchestrator/dagster_project
+Dagster code that orchestrates the dbt transformations.
 
 ## Quick Start
 

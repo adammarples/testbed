@@ -13,4 +13,4 @@ dependencies = [
 ]
 
 [tool.dagster]
-module_name = "orchestrator_project"
+module_name = "dagster_project"

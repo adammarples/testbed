@@ -3,7 +3,7 @@ from dagster import AssetExecutionContext
 from dagster_dbt import DbtCliResource, dbt_assets, DbtProject
 
 # Path to dbt project
-DBT_PROJECT_DIR = Path(__file__).parent.parent / "transforms"
+DBT_PROJECT_DIR = Path(__file__).parent.parent / "dbt_project"
 DBT_PROFILES_DIR = DBT_PROJECT_DIR
 
 # Create dbt project instance
@@ -13,7 +13,7 @@ dbt_project = DbtProject(
 )
 
 # Create dbt resource
-transforms_resource = DbtCliResource(project_dir=str(DBT_PROJECT_DIR), profiles_dir=str(DBT_PROFILES_DIR))
+dbt_resource = DbtCliResource(project_dir=str(DBT_PROJECT_DIR), profiles_dir=str(DBT_PROFILES_DIR))
 
 
 @dbt_assets(manifest=dbt_project.manifest_path)
