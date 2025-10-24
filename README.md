@@ -67,10 +67,13 @@ graph LR
 ## Components
 
 ### data_generator
-Generates synthetic retail data (customers, stores, products, sales) as parquet files.
+Generates synthetic retail data (customers, stores, products, sales) as parquet files in data/generated_data.
 
-### src_db
-DuckLake warehouse storing source data with:
+### data/
+
+* lakehost.duckdb: A DuckLake warehouse acting as an entrypoint for the datalake
+* lake.ducklake: The actual data and the catalogue tables.
+
 - `raw_customers` - customer dimension with SCD2 history
 - `raw_stores` - store dimension with SCD2 history
 - `raw_products` - product catalog
@@ -83,15 +86,3 @@ dbt project that transforms source data into:
 
 ### orchestrator/dagster_project
 Dagster code that orchestrates the dbt transformations.
-
-### dst_db
-The location for the destination db for stage and analytics data, a normal duckdb.
-
-## Tech Stack
-
-- **DuckDB** - embedded analytical database
-- **DuckLake** - lakehouse format built on DuckDB
-- **dbt** - data transformation framework
-- **Dagster** - data orchestration platform
-- **uv** - Python package manager
-- **just** - command runner
