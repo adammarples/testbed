@@ -4,13 +4,14 @@ dbt_project:
     dev:
       type: duckdb
       path: ../../data/lakehost.duckdb
-      database: lakehost
+      database: lake
       schema: analytics
       extensions:
         - httpfs
         - ducklake
       attach:
         - path: ducklake:../../data/catalogue.ducklake
+          alias: lake
           options:
             data_path: s3://ducklake-data/data/
       settings:

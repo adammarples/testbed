@@ -43,7 +43,7 @@ inspect:
     @echo "=== MinIO Bucket Contents ==="
     @tree data/minio/ducklake-data/
     @echo "=== ALl Tables (DuckLake) ==="
-    duckdb data/lakehost.duckdb -c "ATTACH 'ducklake:data/catalogue.ducklake' AS lake(DATA_PATH 's3://ducklake-data/data/'); SHOW TABLES FROM lake;"
+    duckdb data/lakehost.duckdb -c "ATTACH 'ducklake:data/catalogue.ducklake' AS lake(DATA_PATH 's3://ducklake-data/data/'); SHOW ALL TABLES;"
     @echo "\n=== dbt Models ==="
     cd orchestrator/dbt_project && uv run dbt ls
     @echo "\n=== Dagster Assets ==="
