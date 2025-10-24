@@ -1,10 +1,9 @@
 version: 2
 
 sources:
-  - name: metadata
+  - name: lake
     description: Source data from DuckLake warehouse
-    database: metadata
-    schema: main
+    schema: raw
     tables:
       - name: raw_customers
         description: Customer dimension with SCD2 history

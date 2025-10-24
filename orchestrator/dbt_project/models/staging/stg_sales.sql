@@ -7,4 +7,4 @@ select
     quantity,
     unit_price,
     amount
-from {{ source('metadata', 'raw_sales') }}
+from {{ source('lake', 'raw_sales') }}

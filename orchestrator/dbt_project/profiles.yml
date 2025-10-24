@@ -3,10 +3,7 @@ dbt_project:
   outputs:
     dev:
       type: duckdb
-      path: ../../dst_db/analytics.duckdb
-      schema: main
+      path: ducklake:../../data/lake.ducklake
+      schema: analytics
       extensions:
         - ducklake
-      attach:
-        - path: ducklake:../../src_db/metadata.ducklake
-          alias: metadata

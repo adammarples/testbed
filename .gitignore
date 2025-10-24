@@ -15,13 +15,11 @@ env/
 uv.lock
 
 # Data files (generated)
-src_data/
+data/generated_data/
 
 # Databases (generated)
-src_db/*.duckdb*
-src_db/*.ducklake*
-dst_db/*.duckdb*
-dst_db/*.ducklake*
+data/*.duckdb*
+data/*.ducklake*
 
 # dbt
 orchestrator/dbt/target/

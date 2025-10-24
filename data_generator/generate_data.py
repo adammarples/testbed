@@ -258,7 +258,7 @@ def main():
     print(f"  Created {len(sales_df)} sales transactions")
 
     # Save to parquet
-    output_dir = Path(__file__).parent.parent / "src_db" / "src_data"
+    output_dir = Path(__file__).parent.parent / "data" / "generated_data"
     output_dir.mkdir(exist_ok=True)
     print(f"\nSaving data to {output_dir}...")
 

@@ -40,7 +40,7 @@ just rebuild
 graph LR
     subgraph "Data Generation"
         A[data_generator]
-        B[src_data/*.parquet]
+        B[data/generated_data/*.parquet]
     end
 
     subgraph "DuckLake Warehouse"

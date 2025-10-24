@@ -7,4 +7,4 @@ select
     valid_from,
     valid_to,
     is_current
-from {{ source('metadata', 'raw_stores') }}
+from {{ source('lake', 'raw_stores') }}

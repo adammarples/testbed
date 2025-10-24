@@ -19,15 +19,13 @@ setup-dagster:
     mkdir -p $DAGSTER_HOME
 
 setup-ducklake:
-    cd src_db && duckdb :memory: < setup.sql
+    cd data && duckdb lakehost.duckdb < setup.sql
 
 setup: setup-uv setup-dbt setup-dagster setup-data setup-ducklake
 
 inspect:
-    @echo "=== Source Database (DuckLake) ==="
-    duckdb :memory: -c "ATTACH 'ducklake:src_db/metadata.ducklake' AS metadata; SHOW TABLES FROM metadata;"
-    @echo "\n=== Destination Database (Analytics) ==="
-    duckdb dst_db/analytics.duckdb -c "SHOW TABLES;"
+    @echo "=== ALl Tables (DuckLake) ==="
+    duckdb data/lakehost.duckdb -c "ATTACH 'ducklake:data/lake.ducklake'; SHOW ALL TABLES;"
     @echo "\n=== dbt Configuration ==="
     cd orchestrator/dbt_project && uv run dbt debug
     @echo "\n=== dbt Models ==="
@@ -42,9 +40,8 @@ dagster-dev:
     cd orchestrator && uv run dagster dev
 
 clean-artifacts:
-    rm -rf src_data/*.parquet
-    rm -rf src_db/*.duckdb* src_db/*.ducklake*
-    rm -rf dst_db/*.duckdb* dst_db/*.ducklake*
+    rm -rf data/**/*.parquet
+    rm -rf data/*.duckdb* data/*.ducklake*
     cd orchestrator/dbt_project && uv run dbt clean
     rm -rf $DAGSTER_HOME
 

@@ -3,4 +3,4 @@ select
     product_name,
     category,
     base_price
-from {{ source('metadata', 'raw_products') }}
+from {{ source('lake', 'raw_products') }}
