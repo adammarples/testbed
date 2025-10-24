@@ -1,0 +1,16 @@
+[project]
+name = "orchestrator"
+version = "0.1.0"
+description = "Dagster orchestration with dbt for testbed project"
+requires-python = ">=3.13"
+dependencies = [
+    "dagster>=1.9.0",
+    "dagster-webserver>=1.9.0",
+    "dagster-dbt>=0.25.0",
+    "dbt-core>=1.9.0",
+    "dbt-duckdb>=1.9.0",
+    "duckdb>=1.4.0",
+]
+
+[tool.dagster]
+module_name = "orchestrator_project"

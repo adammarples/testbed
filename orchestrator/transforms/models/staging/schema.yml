@@ -1,0 +1,26 @@
+version: 2
+
+sources:
+  - name: metadata
+    description: Source data from DuckLake warehouse
+    database: metadata
+    schema: main
+    tables:
+      - name: raw_customers
+        description: Customer dimension with SCD2 history
+      - name: raw_stores
+        description: Store dimension
+      - name: raw_products
+        description: Product dimension
+      - name: raw_sales
+        description: Sales fact table
+
+models:
+  - name: stg_customers
+    description: Staged customer data
+  - name: stg_stores
+    description: Staged store data
+  - name: stg_products
+    description: Staged product data
+  - name: stg_sales
+    description: Staged sales data

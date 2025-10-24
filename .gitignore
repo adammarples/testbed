@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# UV
+uv.lock
+
+# Data files (generated)
+src_data/
+
+# Databases (generated)
+src_db/*.duckdb*
+src_db/*.ducklake*
+dst_db/*.duckdb*
+dst_db/*.ducklake*
+
+# dbt
+orchestrator/dbt/target/
+orchestrator/dbt/logs/
+orchestrator/dbt/dbt_packages/
+
+# Dagster
+orchestrator/.dagster_home/
+orchestrator/.tmp_dagster_home*
+orchestrator/.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Claude
+.claude/
