@@ -2,6 +2,11 @@
 
 A demonstration project showing a modern data stack with DuckDB, DuckLake, dbt, and Dagster.
 
+## Requirements
+* uv
+* duckdb >= 1.2
+* just
+
 ## Architecture
 
 ```mermaid
