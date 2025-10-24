@@ -11,8 +11,8 @@ CREATE OR REPLACE PERSISTENT SECRET minio_local (
     SECRET 'minioadmin'
 );
 
-ATTACH 'ducklake:catalogue.ducklake' AS catalogue(DATA_PATH 's3://ducklake-data/data/');
-USE catalogue;
+ATTACH 'ducklake:catalogue.ducklake' AS lake(DATA_PATH 's3://ducklake-data/data/');
+USE lake;
 
 CREATE SCHEMA IF NOT EXISTS raw;
 
