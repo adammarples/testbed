@@ -19,9 +19,7 @@ setup-dagster:
     mkdir -p $DAGSTER_HOME
 
 setup-minio:
-    @echo "Creating MinIO bucket..."
     @mkdir -p data/minio/ducklake-data
-    @echo "MinIO bucket 'ducklake-data' ready"
     just start-minio
 
 start-minio:
