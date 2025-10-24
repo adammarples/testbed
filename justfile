@@ -22,6 +22,7 @@ setup-minio:
     @echo "Creating MinIO bucket..."
     @mkdir -p data/minio/ducklake-data
     @echo "MinIO bucket 'ducklake-data' ready"
+    just start-minio
 
 start-minio:
     @minio server data/minio --console-address ":9001" > /dev/null 2>&1 & echo $$! > /tmp/minio.pid
@@ -68,4 +69,4 @@ clean-envs:
 
 destroy: stop-minio clean-artifacts clean-envs
 
-rebuild: destroy start-minio setup inspect
+rebuild: destroy setup inspect
