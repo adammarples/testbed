@@ -1,5 +1,17 @@
 INSTALL ducklake;
-ATTACH 'ducklake:lake.ducklake' AS lake;
+INSTALL httpfs;
+LOAD httpfs;
+
+CREATE SECRET (
+    TYPE S3,
+    ENDPOINT 'localhost:9000',
+    USE_SSL false,
+    URL_STYLE 'path',
+    KEY_ID 'minioadmin',
+    SECRET 'minioadmin'
+);
+
+ATTACH 'ducklake:lake.ducklake' AS lake(DATA_PATH 's3://ducklake-data/data/');
 USE lake;
 
 CREATE SCHEMA IF NOT EXISTS raw;

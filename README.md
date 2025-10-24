@@ -6,9 +6,10 @@ A demonstration project for learning the interactions between DuckLake, dbt, and
 * uv
 * duckdb >= 1.2
 * just
+* minio
 
 ```bash
-brew install uv duckdb just
+brew install uv duckdb just minio/stable/minio
 ```
 
 ## Quick Start
@@ -37,31 +38,36 @@ just rebuild
 ## Architecture
 
 ```mermaid
-graph LR
-    subgraph "Data Generation"
-        A[data_generator]
-        B[data/generated_data/*.parquet]
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f0f0f0','primaryTextColor':'#333','primaryBorderColor':'#666','lineColor':'#666','secondaryColor':'#fff','tertiaryColor':'#fff'}}}%%
+flowchart TB
+    subgraph gen["📦 Data Generation"]
+        A[Python Generator]
+        B[Local Parquet Files]
     end
 
-    subgraph "DuckLake Warehouse"
-        C[raw_customers<br/>raw_stores<br/>raw_products<br/>raw_sales]
+    subgraph lake["🦆 DuckLake"]
+        direction LR
+        C[Raw Schema]
+        M[(MinIO S3)]
     end
 
-    subgraph "Dagster Orchestration"
-        subgraph "dbt Transforms"
-            D[Staging Layer<br/>stg_customers<br/>stg_stores<br/>stg_products<br/>stg_sales]
-            E[Metrics Layer<br/>customer_metrics<br/>store_metrics<br/>product_metrics]
-        end
+    subgraph dbt["🔄 dbt + Dagster"]
+        D[Staging Models]
+        E[Metrics Models]
     end
 
-    A -->|generates| B
-    B -->|loaded into| C
-    C -->|source tables| D
-    D -->|aggregates| E
+    A --> B
+    B --> C
+    C <--> M
+    C --> D
+    D --> E
 
-    style C fill:#f9f,stroke:#333,stroke-width:2px
-    style D fill:#e1f5ff,stroke:#0288d1,stroke-width:2px
-    style E fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
+    style A fill:#4a90e2,stroke:#2e5c8a,color:#fff
+    style B fill:#4a90e2,stroke:#2e5c8a,color:#fff
+    style C fill:#9b59b6,stroke:#6c3a7c,color:#fff
+    style M fill:#ff6b6b,stroke:#c44545,color:#fff
+    style D fill:#45b7d1,stroke:#2a8ca0,color:#fff
+    style E fill:#2ecc71,stroke:#229954,color:#fff
 ```
 
 ## Components

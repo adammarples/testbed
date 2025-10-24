@@ -21,6 +21,9 @@ data/generated_data/
 data/*.duckdb*
 data/*.ducklake*
 
+# MinIO storage
+data/minio/
+
 # dbt
 orchestrator/dbt/target/
 orchestrator/dbt/logs/
