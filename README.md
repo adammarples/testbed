@@ -27,7 +27,7 @@ just inspect
 just dbt-run
 
 # Start Dagster UI
-just dagster-dev
+just serve
 
 # Nuke envs, data, logs, state, rebuild and inspect all
 just rebuild

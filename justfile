@@ -36,7 +36,7 @@ inspect:
 dbt-run:
     cd orchestrator/dbt_project && uv run dbt run
 
-dagster-dev:
+serve:
     cd orchestrator && uv run dagster dev
 
 clean-artifacts:
