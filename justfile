@@ -36,17 +36,19 @@ setup-ducklake:
 
 setup: setup-uv setup-dbt setup-dagster setup-data setup-minio setup-ducklake
 
-inspect:
-    @echo "\n=== dbt Configuration ==="
-    cd orchestrator/dbt_project && uv run dbt debug
-    @echo "=== MinIO Bucket Contents ==="
+inspect-dbt:
+    cd orchestrator/dbt_project && uv run dbt debug && uv run dbt ls
+
+inspect-minio:
     @tree data/minio/ducklake-data/
-    @echo "=== ALl Tables (DuckLake) ==="
+
+inspect-ducklake:
     duckdb data/host.duckdb -c "ATTACH 'ducklake:data/lakehouse.ducklake' AS lake(DATA_PATH 's3://ducklake-data/data/'); SHOW ALL TABLES;"
-    @echo "\n=== dbt Models ==="
-    cd orchestrator/dbt_project && uv run dbt ls
-    @echo "\n=== Dagster Assets ==="
+
+inspect-dagster:
     cd orchestrator && uv run dagster asset list -m dagster_project
+
+inspect: inspect-minio inspect-ducklake inspect-dbt inspect-dagster
 
 dbt-run:
     cd orchestrator/dbt_project && uv run dbt run
