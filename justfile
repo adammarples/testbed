@@ -32,7 +32,7 @@ stop-minio:
     @rm -f /tmp/minio.pid
 
 setup-ducklake:
-    cd data && duckdb lakehost.duckdb < setup.sql
+    cd data && duckdb host.duckdb < setup.sql
 
 setup: setup-uv setup-dbt setup-dagster setup-data setup-minio setup-ducklake
 
@@ -42,7 +42,7 @@ inspect:
     @echo "=== MinIO Bucket Contents ==="
     @tree data/minio/ducklake-data/
     @echo "=== ALl Tables (DuckLake) ==="
-    duckdb data/lakehost.duckdb -c "ATTACH 'ducklake:data/catalogue.ducklake' AS lake(DATA_PATH 's3://ducklake-data/data/'); SHOW ALL TABLES;"
+    duckdb data/host.duckdb -c "ATTACH 'ducklake:data/lakehouse.ducklake' AS lake(DATA_PATH 's3://ducklake-data/data/'); SHOW ALL TABLES;"
     @echo "\n=== dbt Models ==="
     cd orchestrator/dbt_project && uv run dbt ls
     @echo "\n=== Dagster Assets ==="

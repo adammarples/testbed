@@ -41,27 +41,27 @@ just rebuild
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f0f0f0','primaryTextColor':'#333','primaryBorderColor':'#666','lineColor':'#666','secondaryColor':'#fff','tertiaryColor':'#fff'}}}%%
 flowchart LR
-    subgraph gen["📦 Data Generation"]
-        A[Python Generator]
-        B[Parquet Files]
-        A --> B
+    subgraph gen["Data Generation"]
+        A[polars]
+        B[parquet]
+        A --> |just setup-data|B
     end
 
-    subgraph lake["Duckdb - ducklake / minio"]
-        subgraph raw["Raw Schema"]
-            C[raw_customers<br/>raw_stores<br/>raw_products<br/>raw_sales]
+    subgraph lake["Ducklake on MinIO S3"]
+        subgraph raw["lake.raw"]
+            C[Raw<br/>raw_*]
         end
 
-        subgraph orch["🔄 dbt + Dagster"]
-            subgraph analytics["Analytics Schema"]
+        subgraph orch["dbt + Dagster"]
+            subgraph analytics["lake.analytics"]
                 D[Staging<br/>stg_*]
                 E[Metrics<br/>*_metrics]
             end
         end
     end
 
-    B --> C
-    C --> D
+    B -->|just setup-ducklake| C
+    C -->|just dbt-run| D
     D --> E
 
     style A fill:#4a90e2,stroke:#2e5c8a,color:#fff
@@ -78,10 +78,10 @@ Generates synthetic retail data (customers, stores, products, sales) as parquet 
 
 ### data/
 
-* lakehost.duckdb: A DuckLake warehouse acting as an entrypoint for the datalake
-* catalogue.ducklake: The catalogue tables. When attached to lakehost which has ducklake installed, it appears to hold the data tables instead.
+* host.duckdb: A Duckdb database acting as an entrypoint for the lakehouse
+* lakehouse.ducklake: The Lakehouse. Holds the catalogue tables in the '__ducklake_metadata_metadata' database. Holds the data tables in the 'lake' database.
 * generated_data: The inital sample data in parquet files
-* minio/ducklake-data/data: The actual data being served via minio on s3://ducklake-data/data/
+* minio/ducklake-data/data: The actual db parquet data being served via minio on s3://ducklake-data/data/
 
 - `raw_customers` - customer dimension with SCD2 history
 - `raw_stores` - store dimension with SCD2 history
@@ -94,4 +94,4 @@ dbt project that transforms source data into:
 - **Metrics layer**: Aggregated business metrics (customer lifetime value, store performance, product analytics)
 
 ### orchestrator/dagster_project
-Dagster code that orchestrates the dbt transformations.
+Dagster code that sets up dbt assets.
