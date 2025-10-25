@@ -40,33 +40,33 @@ just rebuild
 
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f0f0f0','primaryTextColor':'#333','primaryBorderColor':'#666','lineColor':'#666','secondaryColor':'#fff','tertiaryColor':'#fff'}}}%%
-flowchart TB
+flowchart LR
     subgraph gen["📦 Data Generation"]
         A[Python Generator]
-        B[Local Parquet Files]
+        B[Parquet Files]
+        A --> B
     end
 
-    subgraph lake["🦆 DuckLake"]
-        direction LR
-        C[Raw Schema]
-        M[(MinIO S3)]
+    subgraph lake["Duckdb - ducklake / minio"]
+        subgraph raw["Raw Schema"]
+            C[raw_customers<br/>raw_stores<br/>raw_products<br/>raw_sales]
+        end
+
+        subgraph orch["🔄 dbt + Dagster"]
+            subgraph analytics["Analytics Schema"]
+                D[Staging<br/>stg_*]
+                E[Metrics<br/>*_metrics]
+            end
+        end
     end
 
-    subgraph dbt["🔄 dbt + Dagster"]
-        D[Staging Models]
-        E[Metrics Models]
-    end
-
-    A --> B
     B --> C
-    C <--> M
     C --> D
     D --> E
 
     style A fill:#4a90e2,stroke:#2e5c8a,color:#fff
     style B fill:#4a90e2,stroke:#2e5c8a,color:#fff
     style C fill:#9b59b6,stroke:#6c3a7c,color:#fff
-    style M fill:#ff6b6b,stroke:#c44545,color:#fff
     style D fill:#45b7d1,stroke:#2a8ca0,color:#fff
     style E fill:#2ecc71,stroke:#229954,color:#fff
 ```
