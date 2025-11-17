@@ -2,7 +2,7 @@ INSTALL ducklake;
 INSTALL httpfs;
 LOAD httpfs;
 
-CREATE OR REPLACE SECRET minio_local (
+CREATE OR REPLACE PERSISTENT SECRET minio_local (
     TYPE S3,
     ENDPOINT 'localhost:9000',
     USE_SSL false,
