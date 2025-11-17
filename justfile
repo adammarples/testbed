@@ -1,9 +1,8 @@
+set dotenv-filename := 'orchestrator/.env'
+
 setup-env:
-    #!/usr/bin/env bash
-    if [ ! -f orchestrator/.env ]; then \
-        touch orchestrator/.env; \
-        echo "DAGSTER_HOME={{justfile_directory()}}/orchestrator/.dagster_home" >> orchestrator/.env
-    fi
+    touch orchestrator/.env
+    echo "DAGSTER_HOME={{justfile_directory()}}/orchestrator/.dagster_home" >> orchestrator/.env
 
 setup-uv:
     uv sync --project data_generator
@@ -35,7 +34,7 @@ stop-minio:
 setup-ducklake:
     cd data && duckdb host.duckdb < setup.sql
 
-setup: setup-env setup-uv setup-dbt setup-dagster setup-data setup-minio setup-ducklake
+setup: setup-uv setup-dbt setup-dagster setup-data setup-minio setup-ducklake
 
 inspect-dbt:
     cd orchestrator/dbt_project && uv run dbt debug && uv run dbt ls
