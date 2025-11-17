@@ -16,9 +16,6 @@ brew install uv duckdb just minio/stable/minio tree
 ## Quick Start
 
 ```bash
-# Run once to create a required .env file
-just setup-env
-
 # Install dependencies, generate data and set up warehouse
 just setup
 
