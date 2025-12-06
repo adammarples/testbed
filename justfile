@@ -18,37 +18,37 @@ setup-dbt:
 setup-dagster:
     mkdir -p $DAGSTER_HOME
 
-setup-minio:
-    @mkdir -p data/minio/ducklake-data
-    just start-minio
+setup-rustfs:
+    @mkdir -p data/rustfs/ducklake-data
+    just start-rustfs
 
-start-minio:
-    @minio server data/minio --console-address ":9001" > /dev/null 2>&1 & echo $$! > /tmp/minio.pid
-    @echo "MinIO started in background (PID: `cat /tmp/minio.pid`)"
-    @echo "Web console: http://localhost:9001 (user: minioadmin, pass: minioadmin)"
+start-rustfs:
+    @rustfs data/rustfs --address :9000 --access-key rustfsadmin --secret-key rustfsadmin > /dev/null 2>&1 & echo $$! > /tmp/rustfs.pid
+    @echo "rustfs started in background (PID: `cat /tmp/rustfs.pid`)"
+    @echo "S3 API: http://localhost:9000 (access key: rustfsadmin, secret key: rustfsadmin)"
 
-stop-minio:
-    @pkill -f "minio server data/minio" || echo "MinIO not running"
-    @rm -f /tmp/minio.pid
+stop-rustfs:
+    @pkill -f "rustfs data/rustfs" || echo "rustfs not running"
+    @rm -f /tmp/rustfs.pid
 
 setup-ducklake:
     cd data && duckdb host.duckdb < setup.sql
 
-setup: setup-uv setup-dbt setup-dagster setup-data setup-minio setup-ducklake
+setup: setup-uv setup-dbt setup-dagster setup-data setup-rustfs setup-ducklake
 
 inspect-dbt:
     cd orchestrator/dbt_project && uv run dbt debug && uv run dbt ls
 
-inspect-minio:
-    @tree data/minio/ducklake-data/
+inspect-rustfs:
+    @tree data/rustfs/ducklake-data/
 
 inspect-ducklake:
-    duckdb data/host.duckdb -c "ATTACH 'ducklake:data/lakehouse.ducklake' AS lake(DATA_PATH 's3://ducklake-data/data/'); SHOW ALL TABLES;"
+    duckdb data/host.duckdb -c "ATTACH 'ducklake:data/lakehouse.ducklake' AS lake(DATA_PATH 's3://ducklake-data/'); SHOW ALL TABLES;"
 
 inspect-dagster:
     cd orchestrator && uv run dagster asset list -m dagster_project
 
-inspect: inspect-minio inspect-ducklake inspect-dbt inspect-dagster
+inspect: inspect-rustfs inspect-ducklake inspect-dbt inspect-dagster
 
 dbt-run:
     cd orchestrator/dbt_project && uv run dbt run
@@ -59,7 +59,7 @@ serve:
 clean-artifacts:
     rm -rf data/**/*.parquet
     rm -rf data/*.duckdb* data/*.ducklake*
-    rm -rf data/minio/
+    rm -rf data/rustfs/
     cd orchestrator/dbt_project && uv run dbt clean
     rm -rf $DAGSTER_HOME
 
@@ -67,6 +67,6 @@ clean-envs:
     rm -rf **/.venv
     rm -rf **/uv.lock
 
-destroy: stop-minio clean-artifacts clean-envs
+destroy: stop-rustfs clean-artifacts clean-envs
 
 rebuild: destroy setup inspect

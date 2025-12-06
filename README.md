@@ -6,11 +6,12 @@ A demonstration project for learning the interactions between DuckLake, dbt, and
 * uv
 * duckdb >= 1.2
 * just
-* minio
+* rustfs
 * tree
 
 ```bash
-brew install uv duckdb just minio/stable/minio tree
+brew tap rustfs/homebrew-tap
+brew install uv duckdb just tree rustfs
 ```
 
 ## Quick Start
@@ -47,7 +48,7 @@ flowchart LR
         A --> |just setup-data|B
     end
 
-    subgraph lake["Ducklake on MinIO S3"]
+    subgraph lake["Ducklake on rustfs S3"]
         subgraph raw["lake.raw"]
             C[Raw<br/>raw_*]
         end
@@ -81,7 +82,7 @@ Generates synthetic retail data (customers, stores, products, sales) as parquet 
 * host.duckdb: A Duckdb database acting as an entrypoint for the lakehouse
 * lakehouse.ducklake: The Lakehouse. Holds the catalogue tables in the '__ducklake_metadata_metadata' database. Holds the data tables in the 'lake' database.
 * generated_data: The inital sample data in parquet files
-* minio/ducklake-data/data: The actual db parquet data being served via minio on s3://ducklake-data/data/
+* rustfs/ducklake-data: The actual db parquet data being served via rustfs on s3://ducklake-data/
 
 - `raw_customers` - customer dimension with SCD2 history
 - `raw_stores` - store dimension with SCD2 history

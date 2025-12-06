@@ -1,17 +1,18 @@
 INSTALL ducklake;
-INSTALL httpfs;
-LOAD httpfs;
+INSTALL aws;
+LOAD aws;
 
-CREATE OR REPLACE PERSISTENT SECRET minio_local (
+CREATE OR REPLACE PERSISTENT SECRET (
     TYPE S3,
     ENDPOINT 'localhost:9000',
     USE_SSL false,
     URL_STYLE 'path',
-    KEY_ID 'minioadmin',
-    SECRET 'minioadmin'
+    REGION 'us-east-1',
+    KEY_ID 'rustfsadmin',
+    SECRET 'rustfsadmin'
 );
 
-ATTACH 'ducklake:lakehouse.ducklake' AS lake(DATA_PATH 's3://ducklake-data/data/');
+ATTACH 'ducklake:lakehouse.ducklake' AS lake(DATA_PATH 's3://ducklake-data/');
 USE lake;
 
 CREATE SCHEMA IF NOT EXISTS raw;
