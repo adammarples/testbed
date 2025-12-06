@@ -64,8 +64,8 @@ clean-artifacts:
     rm -rf $DAGSTER_HOME
 
 clean-envs:
-    rm -rf **/.venv
-    rm -rf **/uv.lock
+    find . -type d -name ".venv" -exec rm -rf {} +
+    find . -type f -name "uv.lock" -exec rm -f {} +
 
 destroy: stop-rustfs clean-artifacts clean-envs
 
