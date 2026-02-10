@@ -7,7 +7,7 @@ Creates:
 - Sales transactions over the last year
 """
 
-import polars as pl
+import duckdb
 from datetime import datetime, timedelta
 import random
 from pathlib import Path
@@ -68,7 +68,7 @@ def generate_stores():
 
         store_id += 1
 
-    return pl.DataFrame(stores)
+    return stores
 
 
 def generate_customers():
@@ -135,7 +135,7 @@ def generate_customers():
 
         customer_id += 1
 
-    return pl.DataFrame(customers)
+    return customers
 
 
 def generate_products():
@@ -193,33 +193,37 @@ def generate_products():
         })
         product_id += 1
 
-    return pl.DataFrame(products)
+    return products
 
 
-def generate_sales(stores_df, customers_df, products_df):
+def generate_sales(con):
     """Generate sales transactions over the last year."""
     sales = []
     transaction_id = 1000
 
-    # Get current stores and customers for transaction generation
-    current_stores = stores_df.filter(pl.col("is_current") == True)["store_id"].to_list()
-    current_customers = customers_df.filter(pl.col("is_current") == True)["customer_id"].to_list()
-    all_products = products_df["product_id"].to_list()
+    current_stores = [r[0] for r in con.execute(
+        "SELECT store_id FROM stores WHERE is_current = true"
+    ).fetchall()]
+    current_customers = [r[0] for r in con.execute(
+        "SELECT customer_id FROM customers WHERE is_current = true"
+    ).fetchall()]
+    all_products = [r[0] for r in con.execute(
+        "SELECT product_id FROM products"
+    ).fetchall()]
+    product_prices = {r[0]: r[1] for r in con.execute(
+        "SELECT product_id, base_price FROM products"
+    ).fetchall()}
 
-    # Generate ~100 sales transactions
     for _ in range(100):
         sale_date = start_date + timedelta(days=random.randint(0, 365))
         customer_id = random.choice(current_customers)
         store_id = random.choice(current_stores)
         product_id = random.choice(all_products)
 
-        # Get product base price and apply slight variation
-        base_price = products_df.filter(pl.col("product_id") == product_id)["base_price"].item()
-        # Apply 0-10% discount randomly
+        base_price = product_prices[product_id]
         discount_factor = random.uniform(0.9, 1.0)
         unit_price = round(base_price * discount_factor, 2)
 
-        # Quantity varies by product
         quantity = random.randint(1, 5)
         amount = round(unit_price * quantity, 2)
 
@@ -236,43 +240,69 @@ def generate_sales(stores_df, customers_df, products_df):
 
         transaction_id += 1
 
-    return pl.DataFrame(sales)
+    return sales
+
+
+def load_table(con, name, ddl, rows):
+    """Create a table and bulk insert rows."""
+    keys = rows[0].keys()
+    placeholders = ", ".join(f"${i+1}" for i in range(len(keys)))
+    con.execute(ddl)
+    con.executemany(f"INSERT INTO {name} VALUES ({placeholders})",
+                    [tuple(r[k] for k in keys) for r in rows])
 
 
 def main():
     """Generate all data and save as parquet files."""
+    con = duckdb.connect()
+
     print("Generating stores data...")
-    stores_df = generate_stores()
-    print(f"  Created {len(stores_df)} store records ({stores_df['is_current'].sum()} current)")
+    stores = generate_stores()
+    load_table(con, "stores", """
+        CREATE TABLE stores (
+            store_id BIGINT, store_name VARCHAR, location VARCHAR, store_type VARCHAR,
+            opened_date DATE, valid_from DATE, valid_to DATE, is_current BOOLEAN
+        )""", stores)
+    current_stores = con.execute("SELECT count(*) FROM stores WHERE is_current = true").fetchone()[0]
+    print(f"  Created {len(stores)} store records ({current_stores} current)")
 
     print("Generating customers data...")
-    customers_df = generate_customers()
-    print(f"  Created {len(customers_df)} customer records ({customers_df['is_current'].sum()} current)")
+    customers = generate_customers()
+    load_table(con, "customers", """
+        CREATE TABLE customers (
+            customer_id BIGINT, customer_name VARCHAR, email VARCHAR, signup_date DATE,
+            tier VARCHAR, valid_from DATE, valid_to DATE, is_current BOOLEAN
+        )""", customers)
+    current_customers = con.execute("SELECT count(*) FROM customers WHERE is_current = true").fetchone()[0]
+    print(f"  Created {len(customers)} customer records ({current_customers} current)")
 
     print("Generating products data...")
-    products_df = generate_products()
-    print(f"  Created {len(products_df)} product records")
+    products = generate_products()
+    load_table(con, "products", """
+        CREATE TABLE products (
+            product_id BIGINT, product_name VARCHAR, category VARCHAR, base_price DOUBLE
+        )""", products)
+    print(f"  Created {len(products)} product records")
 
     print("Generating sales data...")
-    sales_df = generate_sales(stores_df, customers_df, products_df)
-    print(f"  Created {len(sales_df)} sales transactions")
+    sales = generate_sales(con)
+    load_table(con, "sales", """
+        CREATE TABLE sales (
+            transaction_id BIGINT, customer_id BIGINT, store_id BIGINT, product_id BIGINT,
+            sale_date DATE, quantity BIGINT, unit_price DOUBLE, amount DOUBLE
+        )""", sales)
+    print(f"  Created {len(sales)} sales transactions")
 
     # Save to parquet
     output_dir = Path(__file__).parent.parent / "data" / "generated_data"
     output_dir.mkdir(exist_ok=True)
     print(f"\nSaving data to {output_dir}...")
 
-    stores_df.write_parquet(output_dir / "raw_stores.parquet")
-    print(f"  ✓ Saved raw_stores.parquet")
+    for table in ["stores", "customers", "products", "sales"]:
+        con.execute(f"COPY {table} TO '{output_dir}/raw_{table}.parquet' (FORMAT PARQUET)")
+        print(f"  ✓ Saved raw_{table}.parquet")
 
-    customers_df.write_parquet(output_dir / "raw_customers.parquet")
-    print(f"  ✓ Saved raw_customers.parquet")
-
-    products_df.write_parquet(output_dir / "raw_products.parquet")
-    print(f"  ✓ Saved raw_products.parquet")
-
-    sales_df.write_parquet(output_dir / "raw_sales.parquet")
-    print(f"  ✓ Saved raw_sales.parquet")
+    con.close()
 
 
 if __name__ == "__main__":
