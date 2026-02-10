@@ -2,7 +2,7 @@
 name = "data-generator"
 version = "0.1.0"
 description = "Generate sample data for testbed project"
-requires-python = ">=3.13"
+requires-python = "==3.13.*"
 dependencies = [
-    "polars>=1.0.0",
+    "polars==1.0.0",
 ]
