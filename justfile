@@ -40,7 +40,7 @@ inspect-dbt:
     cd orchestrator/dbt_project && uv run dbt debug && uv run dbt ls
 
 inspect-rustfs:
-    @tree data/rustfs/ducklake-data/
+    find data/rustfs/ducklake-data/ -type f
 
 inspect-ducklake:
     duckdb data/host.duckdb -c "ATTACH 'ducklake:data/lakehouse.ducklake' AS lake(DATA_PATH 's3://ducklake-data/'); SHOW ALL TABLES;"

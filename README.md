@@ -7,11 +7,10 @@ A demonstration project for learning the interactions between DuckLake, dbt, and
 * duckdb >= 1.2
 * just
 * rustfs
-* tree
 
 ```bash
 brew tap rustfs/homebrew-tap
-brew install uv duckdb just tree rustfs
+brew install uv duckdb just rustfs
 ```
 
 ## Quick Start
@@ -41,7 +40,7 @@ Or just spam this
 
 ```bash
 brew tap rustfs/homebrew-tap
-brew install uv duckdb just tree rustfs
+brew install uv duckdb just rustfs
 gh repo clone adammarples/testbed
 cd testbed
 just setup-env
