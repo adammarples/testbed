@@ -13,7 +13,7 @@ setup-data:
     uv run --project data_generator python data_generator/generate_data.py
 
 setup-dbt:
-    cd orchestrator/dbt_project && uv run dbt deps
+    cd orchestrator/dbt_project && if [ -f packages.yml ]; then uv run dbt deps; fi
 
 setup-dagster:
     mkdir -p $DAGSTER_HOME
