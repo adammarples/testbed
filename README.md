@@ -37,6 +37,18 @@ just rebuild
 
 ```
 
+Or just spam this
+
+```bash
+brew tap rustfs/homebrew-tap
+brew install uv duckdb just tree rustfs
+gh repo clone adammarples/testbed
+cd testbed
+just setup-env
+just setup
+just inspect
+```
+
 ## Architecture
 
 ```mermaid
