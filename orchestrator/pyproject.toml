@@ -13,5 +13,8 @@ dependencies = [
 [tool.uv.sources]
 dbt_project = { path = "dbt_project", editable = true }
 
+[tool.uv]
+python-preference = "only-managed"
+
 [tool.dagster]
 module_name = "dagster_project"
